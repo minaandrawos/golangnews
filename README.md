@@ -7,4 +7,4 @@ A cross platform mobile application written with expo (https://expo.io/), and Re
 
 ## Screenshots
 
-![screenshots](https://github.com/minaandrawos/golangnews/blob/master/assets/images/screenshots.png)
+![screenshots](https://github.com/minaandrawos/golangnews/blob/master/assets/images/screenshots.png){:height="50%" width="50%"}
