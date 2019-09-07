@@ -3,7 +3,7 @@ Go programming language news aggregator written in React Native (source: www.gol
 
 A cross platform mobile application written with expo (https://expo.io/), and React Native (https://facebook.github.io/react-native/).
 
-Google Play Store listing: https://play.google.com/store/apps/details?id=com.minaandrawos.golangnews
+![https://play.google.com/store/apps/details?id=com.minaandrawos.golangnews](https://github.com/steverichey/google-play-badge-svg/blob/master/img/en_get.svg)
 
 ## Screenshots
 
