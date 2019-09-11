@@ -11,3 +11,4 @@ A cross platform mobile application written with [expo](https://expo.io/), and [
 npm install
 npm start
 ```
+Enjoy!
