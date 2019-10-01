@@ -1,5 +1,6 @@
 
 import { StyleSheet } from 'react-native';
+import { grey } from 'ansi-colors';
 
 export default styles = StyleSheet.create({
   container: {
@@ -30,6 +31,10 @@ export default styles = StyleSheet.create({
     // padding: 10,
     fontSize: 16
   },
+  itemMetaText: {
+    fontSize: 12,
+    color: 'grey'
+  },
   itemTag: {
     color: 'white',
     backgroundColor: 'grey',
@@ -40,7 +45,7 @@ export default styles = StyleSheet.create({
   },
   item: {
     backgroundColor: 'oldlace',
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 10,
     flex: 1,
     flexWrap: 'wrap'
