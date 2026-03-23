@@ -1,19 +1,27 @@
 {
   "expo": {
-    "sdkVersion": "34.0.0",
-    "name": "golangnews",
-    "icon": "./assets/images/gonews.png",
+    "name": "Go News",
     "slug": "golangnews",
-    "version": "0.1.1",
-    "description": "A news aggregator for the Go programming language, based on golangnews.com",
+    "version": "2.0.0",
+    "sdkVersion": "54.0.0",
+    "description": "A modern news aggregator for the Go programming language",
+    "icon": "./assets/images/gonews.png",
     "platforms": [
       "android",
-      "ios"
+      "ios",
+      "web"
     ],
+    "userInterfaceStyle": "automatic",
     "android": {
       "package": "com.minaandrawos.golangnews",
       "permissions": [],
-      "versionCode": 5
+      "versionCode": 6,
+      "userInterfaceStyle": "automatic"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "userInterfaceStyle": "automatic",
+      "bundleIdentifier": "com.minaandrawos.golangnews"
     }
   }
 }
