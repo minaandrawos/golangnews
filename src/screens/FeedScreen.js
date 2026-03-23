@@ -13,7 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import * as rssParser from 'react-native-rss-parser';
+import { XMLParser } from 'fast-xml-parser';
 
 import { HOME_URL, LINK_PREFIX } from '../constants';
 import { useTheme } from '../context/ThemeContext';
@@ -29,6 +29,41 @@ const CORS_PROXIES = [
   'https://api.allorigins.win/raw?url=',
 ];
 
+const _xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
+
+function parseRSS(text) {
+  const doc = _xmlParser.parse(text);
+  // RSS 2.0
+  if (doc.rss?.channel) {
+    const raw = doc.rss.channel.item;
+    const items = raw ? (Array.isArray(raw) ? raw : [raw]) : [];
+    return items.map((item) => ({
+      id: item.guid?.['#text'] ?? item.guid ?? item.link ?? '',
+      title: item.title ?? '',
+      published: item.pubDate ?? '',
+      description: item.description ?? '',
+      links: item.link ? [{ url: item.link }] : [],
+    }));
+  }
+  // Atom
+  if (doc.feed?.entry) {
+    const raw = doc.feed.entry;
+    const items = Array.isArray(raw) ? raw : [raw];
+    return items.map((entry) => {
+      const linkEl = Array.isArray(entry.link) ? entry.link[0] : entry.link;
+      const url = linkEl?.['@_href'] ?? (typeof linkEl === 'string' ? linkEl : '');
+      return {
+        id: entry.id ?? url,
+        title: entry.title?.['#text'] ?? entry.title ?? '',
+        published: entry.published ?? entry.updated ?? '',
+        description: entry.summary?.['#text'] ?? entry.summary ?? '',
+        links: url ? [{ url }] : [],
+      };
+    });
+  }
+  return [];
+}
+
 async function fetchUrl(url, signal) {
   if (Platform.OS !== 'web') return fetch(url, { signal });
   for (const proxy of CORS_PROXIES) {
@@ -42,8 +77,8 @@ async function fetchUrl(url, signal) {
   throw new Error('Failed to reach feed. Check your connection and try again.');
 }
 
-function parseItems(rss) {
-  return rss.items
+function parseItems(rawItems) {
+  return rawItems
     .map((item) => {
       const link = item.links && item.links.length > 0 ? item.links[0].url : null;
       if (!link || (!link.startsWith('http://') && !link.startsWith('https://'))) return null;
@@ -86,9 +121,9 @@ export default function FeedScreen({ navigation }) {
       if (!response.ok) throw new Error(`Network error: ${response.status}`);
       const text = await response.text();
       if (controller.signal.aborted) return;
-      const rss = await rssParser.parse(text);
+      const rawItems = parseRSS(text);
       if (controller.signal.aborted) return;
-      setItems(parseItems(rss));
+      setItems(parseItems(rawItems));
     } catch (err) {
       if (err.name === 'AbortError') return;
       setError(err.message || 'Failed to load feed. Please try again.');

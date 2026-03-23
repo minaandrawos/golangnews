@@ -22,7 +22,7 @@ jest.mock('react-native-safe-area-context', () => ({
 jest.mock('expo-status-bar', () => ({ StatusBar: () => null }));
 jest.mock('react-native-webview', () => ({ WebView: () => null }));
 jest.mock('@expo/vector-icons', () => ({ Ionicons: () => null }));
-jest.mock('react-native-rss-parser', () => ({ parse: jest.fn(() => Promise.resolve({ items: [] })) }));
+jest.mock('fast-xml-parser', () => ({ XMLParser: jest.fn(() => ({ parse: jest.fn(() => ({})) })) }));
 
 import App from './App';
 
