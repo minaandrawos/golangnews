@@ -16,7 +16,11 @@
       "package": "com.minaandrawos.golangnews",
       "permissions": [],
       "versionCode": 6,
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/gonews_adaptive.png",
+        "backgroundColor": "#021B2A"
+      }
     },
     "ios": {
       "supportsTablet": true,
