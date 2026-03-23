@@ -88,7 +88,7 @@ export default function ArticleScreen({ route, navigation }) {
       <WebView
         ref={webViewRef}
         source={{ uri: link }}
-        originWhitelist={['https://*', 'http://*']}
+        originWhitelist={['https://*']}
         startInLoadingState
         javaScriptEnabled
         domStorageEnabled
