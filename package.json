@@ -29,6 +29,9 @@
     "react-native-web": "^0.21.2",
     "react-native-webview": "^13.15.0"
   },
+  "overrides": {
+    "http-proxy-agent": "^8.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.24.0",
     "babel-preset-expo": "~54.0.10",
