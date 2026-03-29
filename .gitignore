@@ -13,6 +13,11 @@ android/build/
 android/app/build/
 android/.gradle/
 
+# EAS build artifacts
+builds/
+*.aab
+*.apk
+
 # Android signing keys — never commit
 *.keystore
 *.jks
