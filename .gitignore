@@ -39,3 +39,6 @@ yarn-error.log*
 
 # Archive / local working files (not part of the app)
 _archive/
+
+# Claude Code local config
+.claude/
