@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import FeedScreen from './src/screens/FeedScreen';
 import ArticleScreen from './src/screens/ArticleScreen';
+import AboutScreen from './src/screens/AboutScreen';
 import { ThemeProvider, useTheme, useIsDark } from './src/context/ThemeContext';
 
 const Stack = createStackNavigator();
@@ -67,6 +68,7 @@ function AppNavigator() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Feed" component={FeedScreen} />
           <Stack.Screen name="Article" component={ArticleScreen} />
+          <Stack.Screen name="About" component={AboutScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </>

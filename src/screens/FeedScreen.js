@@ -31,6 +31,11 @@ const CORS_PROXIES = [
 
 const _xmlParser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '@_' });
 
+function extractPoster(description) {
+  const match = String(description ?? '').match(/posted by (.+)/i);
+  return match ? match[1].trim() : null;
+}
+
 function parseRSS(text) {
   const doc = _xmlParser.parse(text);
   // RSS 2.0
@@ -42,6 +47,7 @@ function parseRSS(text) {
       title: item.title ?? '',
       published: item.pubDate ?? '',
       description: item.description ?? '',
+      poster: extractPoster(item.description),
       links: item.link ? [{ url: item.link }] : [],
     }));
   }
@@ -52,11 +58,13 @@ function parseRSS(text) {
     return items.map((entry) => {
       const linkEl = Array.isArray(entry.link) ? entry.link[0] : entry.link;
       const url = linkEl?.['@_href'] ?? (typeof linkEl === 'string' ? linkEl : '');
+      const desc = entry.summary?.['#text'] ?? entry.summary ?? '';
       return {
         id: entry.id ?? url,
         title: entry.title?.['#text'] ?? entry.title ?? '',
         published: entry.published ?? entry.updated ?? '',
-        description: entry.summary?.['#text'] ?? entry.summary ?? '',
+        description: desc,
+        poster: extractPoster(desc),
         links: url ? [{ url }] : [],
       };
     });
@@ -77,8 +85,12 @@ async function fetchUrl(url, signal) {
   throw new Error('Failed to reach feed. Check your connection and try again.');
 }
 
+const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
+
 function parseItems(rawItems) {
-  return rawItems
+  const cutoff = Date.now() - NINETY_DAYS_MS;
+
+  const mapped = rawItems
     .map((item) => {
       const link = item.links && item.links.length > 0 ? item.links[0].url : null;
       if (!link || (!link.startsWith('http://') && !link.startsWith('https://'))) return null;
@@ -87,10 +99,20 @@ function parseItems(rawItems) {
         title: item.title || '',
         published: item.published || '',
         description: item.description || '',
+        poster: item.poster || null,
         link,
       };
     })
     .filter(Boolean);
+
+  const fresh = mapped.filter((item) => {
+    if (!item.published) return true;
+    const ts = new Date(item.published).getTime();
+    return isNaN(ts) || ts >= cutoff;
+  });
+
+  // Fall back to all items if filtering would leave nothing
+  return fresh.length > 0 ? fresh : mapped;
 }
 
 export default function FeedScreen({ navigation }) {
@@ -210,9 +232,19 @@ export default function FeedScreen({ navigation }) {
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <View style={styles.headerTitleRow}>
-          <View style={styles.goDot} />
-          <Text style={styles.headerTitle}>Go News</Text>
+        <View style={styles.headerTopRow}>
+          <View style={styles.headerTitleRow}>
+            <View style={styles.goDot} />
+            <Text style={styles.headerTitle}>Go News</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('About')}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            accessibilityLabel="Contact Us"
+            accessibilityRole="button"
+          >
+            <Ionicons name="information-circle-outline" size={24} color={colors.headerText} />
+          </TouchableOpacity>
         </View>
         <Text style={styles.headerSubtitle}>Go news aggregator</Text>
       </View>
@@ -281,6 +313,11 @@ function makeStyles(colors) {
       paddingHorizontal: 20,
       paddingTop: 16,
       paddingBottom: 14,
+    },
+    headerTopRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
     },
     headerTitleRow: {
       flexDirection: 'row',

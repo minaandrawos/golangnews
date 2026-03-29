@@ -22,7 +22,7 @@ export default function NewsCard({ item, onPress, onTagPress }) {
       accessibilityRole="button"
     >
       {domain ? (
-        <Text style={styles.domain} numberOfLines={1}>{domain}</Text>
+        <Text style={styles.domain} numberOfLines={1}>via {domain}</Text>
       ) : null}
 
       <Text style={styles.title} numberOfLines={4}>{cleanTitle}</Text>
@@ -44,7 +44,10 @@ export default function NewsCard({ item, onPress, onTagPress }) {
         </View>
       )}
 
-      {relDate ? <Text style={styles.date}>{relDate}</Text> : null}
+      <View style={styles.metaRow}>
+        {item.poster ? <Text style={styles.date}>posted by {item.poster}</Text> : null}
+        {relDate ? <Text style={styles.date}>{relDate}</Text> : null}
+      </View>
     </TouchableOpacity>
   );
 }
@@ -92,10 +95,16 @@ function makeStyles(colors) {
       fontSize: 12,
       fontWeight: '500',
     },
+    metaRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      marginTop: 2,
+      gap: 4,
+    },
     date: {
       fontSize: 11,
       color: colors.textSecondary,
-      marginTop: 2,
     },
   });
 }
