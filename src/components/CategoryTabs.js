@@ -1,11 +1,13 @@
 import React, { useRef, useMemo, useEffect } from 'react';
-import { ScrollView, TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { ScrollView, TouchableOpacity, Text, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { CATEGORIES } from '../constants';
 import { useTheme } from '../context/ThemeContext';
 
 export default function CategoryTabs({ selected, onSelect }) {
   const colors = useTheme();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { width } = useWindowDimensions();
+  const fontScale = width >= 768 ? Math.min(width / 390, 1.35) : 1;
+  const styles = useMemo(() => makeStyles(colors, fontScale), [colors, fontScale]);
   const scrollRef = useRef(null);
   const tabOffsets = useRef({});
 
@@ -48,7 +50,8 @@ export default function CategoryTabs({ selected, onSelect }) {
   );
 }
 
-function makeStyles(colors) {
+function makeStyles(colors, fontScale = 1) {
+  const fs = (size) => Math.round(size * fontScale);
   return StyleSheet.create({
     wrapper: {
       borderBottomWidth: 1,
@@ -73,7 +76,7 @@ function makeStyles(colors) {
     },
     tabText: {
       color: colors.textSecondary,
-      fontSize: 13,
+      fontSize: fs(13),
       fontWeight: '500',
     },
     tabTextActive: {

@@ -6,7 +6,7 @@ node_modules/
 dist/
 web-build/
 
-# Native build outputs
+# Native build artifacts and generated files
 ios/build/
 ios/Pods/
 android/build/

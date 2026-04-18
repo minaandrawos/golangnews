@@ -1,5 +1,7 @@
 # Go News
 
+![Go News](assets/images/gopher-plan-1024x500.png)
+
 A modern Go programming language news aggregator for iOS and Android, powered by [golangnews.com](https://golangnews.com/).
 
 Built with [Expo](https://expo.dev/) SDK 54 and [React Native](https://reactnative.dev/).

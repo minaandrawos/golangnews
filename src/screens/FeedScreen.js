@@ -9,6 +9,7 @@ import {
   BackHandler,
   Platform,
   Linking,
+  useWindowDimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
@@ -117,7 +118,9 @@ function parseItems(rawItems) {
 
 export default function FeedScreen({ navigation }) {
   const colors = useTheme();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { width } = useWindowDimensions();
+  const fontScale = width >= 768 ? Math.min(width / 390, 1.35) : 1;
+  const styles = useMemo(() => makeStyles(colors, fontScale), [colors, fontScale]);
   const insets = useSafeAreaInsets();
 
   const [items, setItems] = useState([]);
@@ -242,8 +245,10 @@ export default function FeedScreen({ navigation }) {
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             accessibilityLabel="Contact Us"
             accessibilityRole="button"
+            style={styles.contactBtn}
           >
-            <Ionicons name="information-circle-outline" size={24} color={colors.headerText} />
+            <Ionicons name="mail-outline" size={16} color={colors.headerText} />
+            <Text style={styles.contactBtnText}>Contact Us</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.headerSubtitle}>Go news aggregator</Text>
@@ -297,7 +302,8 @@ export default function FeedScreen({ navigation }) {
   );
 }
 
-function makeStyles(colors) {
+function makeStyles(colors, fontScale = 1) {
+  const fs = (size) => Math.round(size * fontScale);
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -331,13 +337,13 @@ function makeStyles(colors) {
       backgroundColor: colors.headerText,
     },
     headerTitle: {
-      fontSize: 22,
+      fontSize: fs(22),
       fontWeight: '800',
       color: colors.headerText,
       letterSpacing: -0.3,
     },
     headerSubtitle: {
-      fontSize: 12,
+      fontSize: fs(12),
       color: colors.headerText,
       marginTop: 3,
       marginLeft: 18,
@@ -363,9 +369,9 @@ function makeStyles(colors) {
     },
     errorText: {
       color: colors.textSecondary,
-      fontSize: 14,
+      fontSize: fs(14),
       textAlign: 'center',
-      lineHeight: 22,
+      lineHeight: fs(22),
       marginBottom: 24,
     },
     retryButton: {
@@ -377,18 +383,32 @@ function makeStyles(colors) {
     retryText: {
       color: colors.background,
       fontWeight: '700',
-      fontSize: 14,
+      fontSize: fs(14),
     },
     emptyText: {
       color: colors.textSecondary,
-      fontSize: 15,
+      fontSize: fs(15),
     },
     privacyLink: {
       color: colors.textSecondary,
-      fontSize: 12,
+      fontSize: fs(12),
       textAlign: 'center',
       textDecorationLine: 'underline',
       paddingVertical: 16,
+    },
+    contactBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 5,
+      backgroundColor: 'rgba(255,255,255,0.15)',
+      borderRadius: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+    },
+    contactBtnText: {
+      color: colors.headerText,
+      fontSize: fs(13),
+      fontWeight: '600',
     },
   });
 }

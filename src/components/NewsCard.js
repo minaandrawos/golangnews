@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, useWindowDimensions } from 'react-native';
 import { TAG_PREFIX } from '../constants';
 import { useTheme } from '../context/ThemeContext';
 import { getDomain, getRelativeDate, parseTitle } from '../utils';
 
 export default function NewsCard({ item, onPress, onTagPress }) {
   const colors = useTheme();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { width } = useWindowDimensions();
+  const fontScale = width >= 768 ? Math.min(width / 390, 1.35) : 1;
+  const styles = useMemo(() => makeStyles(colors, fontScale), [colors, fontScale]);
 
   const { cleanTitle, tags } = parseTitle(item.title || '');
   const domain = getDomain(item.link || '');
@@ -52,7 +54,8 @@ export default function NewsCard({ item, onPress, onTagPress }) {
   );
 }
 
-function makeStyles(colors) {
+function makeStyles(colors, fontScale = 1) {
+  const fs = (size) => Math.round(size * fontScale);
   return StyleSheet.create({
     card: {
       backgroundColor: colors.card,
@@ -64,7 +67,7 @@ function makeStyles(colors) {
       marginVertical: 6,
     },
     domain: {
-      fontSize: 11,
+      fontSize: fs(11),
       color: colors.accent,
       fontWeight: '600',
       marginBottom: 6,
@@ -72,10 +75,10 @@ function makeStyles(colors) {
       letterSpacing: 0.2,
     },
     title: {
-      fontSize: 15,
+      fontSize: fs(15),
       color: colors.textPrimary,
       fontWeight: '500',
-      lineHeight: 22,
+      lineHeight: fs(22),
       marginBottom: 8,
     },
     tagsRow: {
@@ -92,7 +95,7 @@ function makeStyles(colors) {
     },
     tagText: {
       color: colors.tagText,
-      fontSize: 12,
+      fontSize: fs(12),
       fontWeight: '500',
     },
     metaRow: {
@@ -103,7 +106,7 @@ function makeStyles(colors) {
       gap: 4,
     },
     date: {
-      fontSize: 11,
+      fontSize: fs(11),
       color: colors.textSecondary,
     },
   });

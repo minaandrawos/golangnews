@@ -2,7 +2,7 @@
   "expo": {
     "name": "Go News",
     "slug": "golangnews",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "sdkVersion": "54.0.0",
     "description": "A modern news aggregator for the Go programming language",
     "icon": "./assets/images/gonews_clean.png",
@@ -15,7 +15,7 @@
     "android": {
       "package": "com.minaandrawos.golangnews",
       "permissions": [],
-      "versionCode": 8,
+      "versionCode": 9,
       "userInterfaceStyle": "automatic",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/gonews.png",
@@ -26,12 +26,18 @@
       "supportsTablet": true,
       "userInterfaceStyle": "automatic",
       "bundleIdentifier": "com.minaandrawos.golangnews",
-      "buildNumber": "8"
+      "buildNumber": "9",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "extra": {
       "eas": {
         "projectId": "393d2340-f92e-11e8-b598-4ddb31004a91"
       }
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
